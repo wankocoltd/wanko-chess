@@ -1,0 +1,25 @@
+#define MDM_GP_USER		4		//用户消息
+#define SUB_GF_GET_CZCITY	467		//充值商城
+
+//充值商城请求 客户端发送到服务端
+struct CMD_GP_CZCITY
+{
+	DWORD			dwUserID;			//玩家 ID
+	DWORD			dwKindID;			//游戏 ID (必填) 320跑得快 
+	DWORD			dwType;				//商城类型(必填) 1苹果支付 2支付宝或者微信 3支付宝或者微信
+};
+
+//充值商城结果(修改) 苹果商店资费产品标识符（服务端中的Product IDs）
+struct CMD_GP_RefillCityResult
+{
+	DWORD								dwSortID;					//序号
+	BYTE								cbShowPicID;					//类型　0是置前礼包(图片序号0-5)
+	BYTE								cbShowFlag;					//是否可用 0不显示
+	LONG								lRefillFeeValue;				//充值费率 单位：分 100=1元
+	LONG								lGoldScore;					//金币数量
+	LONG								lGiveAwayGoldScore;				//加送金币，0就是没送
+	TCHAR								szProductIDs[64];				//苹果商店资费产品标识符 限IOS
+};
+
+多个资费通过一个命令一起发送过来，资费资费的个数通过数据包消息头中的数据包长度字段除以sizeof(CMD_GP_RefillCityResult)
+WORD wItemCount = wPackeSize/sizeof(CMD_GP_RefillCityResult);
